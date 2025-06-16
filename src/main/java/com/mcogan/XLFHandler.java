@@ -5,10 +5,10 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import java.util.HashMap;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
-import static com.mcogan.logging.LoggingConstants.METHOD_ENTRY_PLC_B4_METHOD_NAME;
-import static com.mcogan.logging.LoggingConstants.METHOD_EXIT_PLC_B4_METHOD_NAME;
 
 public class XLFHandler  extends DefaultHandler {
     private static final Logger LOG = Logger.getLogger(XLFHandler.class.toString());
@@ -25,11 +25,23 @@ public class XLFHandler  extends DefaultHandler {
 
     private HashMap<String,String> translationMap=new HashMap<>();
     private Boolean processingTargetUnit=false;
+    private static ResourceBundle messages=null;
+    private static String usingLocale=null;
+    static {
+        try {
+            Locale newLocale = new Locale("fr","FR");
+            usingLocale=newLocale.toString();
+            messages = ResourceBundle.getBundle("messages", newLocale);
+        }catch(Exception e){
+            System.err.println("Erreur lors de l'initialisation des messages de l'application. Veuillez vérifier" +
+                    " les autorisations du fichier messages.properties.");
+        }
+    }
 
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         final String METHOD_NAME="startElement";
-        LOG.info(METHOD_ENTRY_PLC_B4_METHOD_NAME+METHOD_NAME );
+        LOG.info(messages.getString(MessageKeys.METHOD_ENTRY_LOG)+METHOD_NAME );
         switch (qName) {
             case "trans-unit":
                 transUnitId=new StringBuilder();
@@ -47,13 +59,13 @@ public class XLFHandler  extends DefaultHandler {
                 processingTargetUnit=false;
                 break;
         }
-        LOG.info(METHOD_EXIT_PLC_B4_METHOD_NAME+ METHOD_NAME);
+        LOG.info(messages.getString(MessageKeys.METHOD_EXIT_LOG)+ METHOD_NAME);
     }
 
     @Override
     public void characters(char[] ch, int start, int length) throws SAXException {
         final String METHOD_NAME="characters";
-        LOG.info(METHOD_ENTRY_PLC_B4_METHOD_NAME+METHOD_NAME );
+        LOG.info(messages.getString(MessageKeys.METHOD_ENTRY_LOG)+METHOD_NAME );
         StringBuilder content=new StringBuilder();
         content.append(ch,start,length);
         System.out.println("Processing characters event for "  +content);
@@ -62,13 +74,13 @@ public class XLFHandler  extends DefaultHandler {
             System.out.println("translationText = " + translationText.toString());
             processingTargetUnit=false;
         }
-        LOG.info(METHOD_EXIT_PLC_B4_METHOD_NAME+ METHOD_NAME);
+        LOG.info(messages.getString(MessageKeys.METHOD_EXIT_LOG)+ METHOD_NAME);
     }
 
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
         final String METHOD_NAME="endElement";
-        LOG.info(METHOD_ENTRY_PLC_B4_METHOD_NAME+METHOD_NAME );
+        LOG.info(messages.getString(MessageKeys.METHOD_ENTRY_LOG)+METHOD_NAME );
         switch (qName) {
             case "target":
                 translationMap.put(transUnitId.toString(), translationText.toString());
@@ -79,6 +91,6 @@ public class XLFHandler  extends DefaultHandler {
                 System.out.println("qname is " + qName);
                 break;
         }
-        LOG.info(METHOD_EXIT_PLC_B4_METHOD_NAME+ METHOD_NAME);
+        LOG.info(messages.getString(MessageKeys.METHOD_EXIT_LOG)+ METHOD_NAME);
     }
 }
