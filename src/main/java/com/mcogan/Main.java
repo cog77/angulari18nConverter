@@ -23,7 +23,8 @@ public class Main {
     private static String usingLocale=null;
     static {
         try {
-            Locale newLocale = new Locale("fr","FR");
+            //Locale newLocale = new Locale("fr","FR");
+            Locale newLocale = Locale.getDefault();
             usingLocale=newLocale.toString();
             messages = ResourceBundle.getBundle("messages", newLocale);
         }catch(Exception e){
