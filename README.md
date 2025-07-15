@@ -17,3 +17,10 @@ Have fun and I hope this is useful (and also is solved for in upcoming versions
 of Angular ;) ).
 
 Mike Cogan
+
+P.S.  The code does need refactoring (please don't start trying to use regular 
+expressions everywhere as they are very tricky to debug).  I wrote this 
+in a panic scenario on finding that the angular output was in folders as 
+mentioned above.  I personally found this way of structuring far easier to step 
+through with debug but it could do with some tidying up, refactoring and maybe 
+some comments on the more complex searches or assumptions.
